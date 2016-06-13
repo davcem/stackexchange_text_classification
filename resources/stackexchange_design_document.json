@@ -1,0 +1,14 @@
+{
+   "_id": "_design/search",
+   "fulltext": {
+       "by_title": {
+           "index": "function(doc) { var ret=new Document(); ret.add(doc.title); return ret }"
+       },
+       "by_body": {
+           "index": "function(doc) { var ret=new Document(); ret.add(doc.body); return ret }"
+       },
+       "by_tags": {
+           "index": "function(doc) { var ret=new Document(); ret.add(doc.tags); return ret }"
+       }
+   }
+}
