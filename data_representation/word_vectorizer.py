@@ -30,6 +30,51 @@ def stem_tokens(tokens, stemmer):
         stemmed.append(stemmer.stem(item))
     return stemmed
 
+def testDifferentStemmer():
+    
+    for document_fields in dtm_builder.DEFAULT_ALL_DOCUMENT_FIELDS:
+        
+        if pp.STACKEXCHANGE_TITLE_COLUMN in document_fields:
+            
+            min_df=DEFAULT_MIN_DF_DICT[pp.STACKEXCHANGE_TITLE_COLUMN]
+            
+        else:
+            
+            min_df=DEFAULT_MIN_DF_DICT[DEFAULT_MIN_DF_DICT_KEY_OTHERS]
+
+        dataset_document_name=ds.DEFAULT_DATASET_DOCUMENT_NAME
+        dataset_name=ds.DEFAULT_TRAININGSET_NAME
+        
+        used_fields = dtm_builder.retrieveValueForUsedFields(document_fields)
+            
+        print("Used fields: " + str(used_fields))
+        print("================================")
+        print("min_df: " + str(min_df))
+        
+        document = dtm_builder.getDatasetContentDocumentFromDatabase(
+                                            dataset_document_name, dataset_name, 
+                                            used_fields)
+        
+        document_contents = document[dtm_builder.DSCD_FIELD_CONTENT]
+        
+        #normal vectorizer
+        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
+                                       min_df=min_df)
+        
+        print("Normal vectorizer:")
+        print("------------------")
+        
+        fittransformVectorizerAndPrintDetails(t_vectorizer, document_contents)
+        
+        print()
+        
+        #vectorizer with stemmer
+        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
+                                       min_df=min_df, tokenizer=tokenize)
+        
+        print("Stemmer vectorizer:")
+        print("-------------------")
+
 def testVectorizer():
     
     """

@@ -7,7 +7,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
-
 from sklearn import tree
 from sklearn import metrics
 
@@ -18,25 +17,29 @@ warnings.filterwarnings("ignore")
 
 """
 
-- What is open?
+#TODO: What is open?
     - Perform classification with SVC - OPEN
     - Perform classification with Decission tree - OPEN
-    - Check if dataset should be splitted again (Low train, but high test score)
+    - Evaluation: http://scikit-learn.org/stable/modules/model_evaluation.html
     - Maybe: 
+        - Check if dataset should be splitted again (Low train, but high test score)
         - GridSearch for min_df
         - Cross-validation?
+            http://scikit-learn.org/stable/modules/cross_validation.html
+            http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.cross_val_score.html#sklearn.cross_validation.cross_val_score
         - Perform classification with RandomForest
 
 """
 
-def testClassifierWithGivenEstimatorForOVR(estimator, use_stemmer=False,
-                                           document_train, document_test,
-                                           min_df):
+def performClassificationWithGivenClassifier(classifier,document_train, 
+                                             document_test,min_df,
+                                             use_stemmer=False):
     
     """
-    Test classifier which need to use an OVR wrapper.
+    Perform classification with given classifier (see 
+    #http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html)
     
-    :param estimator - The estimator to use (SVM(SVC), NaiveBayes(MultinomialNB)
+    :param classifier - The classifier to use (see
     :param use_stemmer - Wether or not to use a stemmer within word tokenizer
     :param document_train - dtm for training
     :param document_test - dtm for testing
@@ -62,64 +65,34 @@ def testClassifierWithGivenEstimatorForOVR(estimator, use_stemmer=False,
                                                 document_test,t_vectorizer)
     
     feature_names = t_vectorizer.get_feature_names()
-    print("Number of features: " + str(len(feature_names))) 
+    print("Number of features:" + str(len(feature_names))) 
     
     #put the estimator in the OVR-Classifier and fit the model
-    classifier = OneVsRestClassifier(estimator).fit(dtm_train, targets_train)
-    
-    print("Number of estimators: " + str(len(classifier.estimators_)))
+    classifier.fit(dtm_train, targets_train)
     
     score_train = classifier.score(dtm_train, targets_train)
     
-    print("Score: " + str(score_train))
+    print("Score train:" + str(score_train))
     
     targets_predicted = classifier.predict(dtm_test)
     
-    print("Score test: " + str(np.mean(targets_predicted == targets_test)))
+    print("Score test:" + str(np.mean(targets_predicted == targets_test)))
     
     printClassificationMetrics(targets_test, targets_predicted)
-
-    #print(metrics.classification_report(targets_test, targets_predicted,
-                                #target_names=t_vectorizer.get_feature_names()))
     
 def printClassificationMetrics(ytrue, ypredict):
     
-    print("Classification performance metrics: ")
-    print("Accuracy: " + str(metrics.accuracy_score(ytrue, ypredict)))
-    print("Precision: " + str(metrics.precision_score(ytrue, ypredict, 
+    print("Classification performance metrics:")
+    print("Accuracy:" + str(metrics.accuracy_score(ytrue, ypredict)))
+    print("Precision:" + str(metrics.precision_score(ytrue, ypredict, 
                                                       average='micro')))
-    print("Precision(Macro): " + str(metrics.precision_score(ytrue, ypredict, 
+    print("Precision(Macro):" + str(metrics.precision_score(ytrue, ypredict, 
                                                       average='macro')))
-    print("Recall: " + str(metrics.recall_score(ytrue, ypredict)))
-    print("F1: " + str(metrics.f1_score(ytrue, ypredict, average='micro')))
-    print("F1(Macro): " + str(metrics.f1_score(ytrue, ypredict, average='macro')))
-    
-def testTreeClassifier(document_train, document_test, min_df):
-    
-    t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
-                                   min_df=min_df)
-    dtm_train, targets_train = dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                document_train,t_vectorizer)
-    
-    dtm_test, targets_test = dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                document_test,t_vectorizer)
-    
-    classifier = tree.DecisionTreeClassifier(random_state=42)
-    
-    classifier.fit(dtm_train[:2000], targets_train[:2000])
-    
-    score_train = classifier.score(dtm_train, targets_train)
-    
-    print("Score train: " + str(score_train))
-    
-    targets_predicted = classifier.predict(dtm_test)
-    
-    print("Score test: " + str(np.mean(targets_predicted == targets_test)))
-    
-    print(metrics.classification_report(targets_test, targets_predicted,
-                                target_names=t_vectorizer.get_feature_names()))
-    
-def testApproachForAllFields(min_df, baseline=True):
+    print("Recall:" + str(metrics.recall_score(ytrue, ypredict)))
+    print("F1:" + str(metrics.f1_score(ytrue, ypredict, average='micro')))
+    print("F1(Macro):" + str(metrics.f1_score(ytrue, ypredict, average='macro')))
+            
+def performClassificationForAllFields(baseline=True, use_tree=False):
     
     """
     Tests an approach for all combinations of fields:
@@ -171,21 +144,24 @@ def testApproachForAllFields(min_df, baseline=True):
             if baseline:
                 
                 estimator = MultinomialNB(alpha=0.01)
+                classifier = OneVsRestClassifier(estimator)
                 
-            else:
+            else:#if not baseline classifier use tree or SVC
                 
-                estimator = estimator = SVC(C=2.0, kernel='linear', 
-                     decision_function_shape='ovr')
-            
-            #test the classifier
-            testClassifierWithGivenEstimatorForOVR(estimator, document_train, 
-                                                 document_test, min_df)
+                if use_tree:
+                    
+                    classifier = tree.DecisionTreeClassifier(random_state=42)
+                    
+                else:    
+                    estimator = estimator = SVC(C=3.0, kernel='linear', 
+                                                decision_function_shape='ovr',
+                                                degree=1, random_state=1)
+                    
+                    classifier = OneVsRestClassifier(estimator)
                 
-                
-            
-                
-            #testClassifierTree(document_train, document_test, min_df)
-
+            performClassificationWithGivenClassifier(classifier, 
+                                                document_train, document_test,
+                                                min_df, use_stemmer=False)
             
             print()
                         
@@ -207,6 +183,4 @@ for body: 0.300777407584
 body+title: 0.300936062193
 """
 
-min_df=0.00003125
-
-testApproachForAllFields(min_df, baseline=False)
+performClassificationForAllFields(baseline=False)

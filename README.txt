@@ -16,6 +16,9 @@ allowLeadingWildcard=true in the [lucene] section
 ** re
 ** string
 ** datetime
+** PyStemmer
+** scikit-learn
+** numpy
 
 /*Short readme to work with given packages*/
 
