@@ -16,7 +16,9 @@ from sklearn.grid_search import GridSearchCV
 import warnings
 warnings.filterwarnings("ignore")
 
-def performGridSearchForAllFields(use_tree=False):
+DEFAULT_NUM_INSTANCES = 2000
+
+def performGridSearchForAllFields(number_instances, use_tree=False):
     
     dataset_document_names = [ds.DEFAULT_DATASET_DOCUMENT_NAME]
     dataset_name=ds.DEFAULT_TRAININGSET_NAME
@@ -52,30 +54,36 @@ def performGridSearchForAllFields(use_tree=False):
                 classifier = DecisionTreeClassifier()
                 
                 classifier_parameters = {
+                                        "max_features": ["auto", "sqrt", "log2"],
+                                        "random_state": [1,5,20,42]
+                                        }
+                
+                print("DecisionTree:")
+
+            else:
+                
+                classifier = OneVsRestClassifier(SVC(
+                                                decision_function_shape='ovr'))
+                     
+                classifier_parameters = {
                   "estimator__C": [1,3,8],
                   "estimator__kernel": ["poly","rbf", "linear", "sigmoid"],
                   "estimator__degree":[1,3,5],
                   "estimator__random_state":[1,10,42]
                 }
-            
-            else:
                 
-                classifier = OneVsRestClassifier(SVC(
-                                                decision_function_shape='ovr'))
-                
-                classifier_parameters = {
-                                        "max_features": ["auto", "sqrt", "log2"],
-                                        "random_state": [1,5,20,42],
-    }
+                print("SVM:")
+
                 
             performGridSearchForGivenClassifier(document, classifier, 
-                                                classifier_parameters,min_df)
+                                                classifier_parameters,min_df,
+                                                number_instances)
             
             print()
             
 def performGridSearchForGivenClassifier(document, classifier, clf_parameters, 
-                                        min_df, number_instances=1000):
-    
+                                min_df, number_instances):
+
     t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
                                    min_df=min_df)
     
@@ -84,6 +92,12 @@ def performGridSearchForGivenClassifier(document, classifier, clf_parameters,
         
     param_tunning = GridSearchCV(classifier, param_grid=clf_parameters,verbose=1,
                                  n_jobs=-1, scoring='f1')
+    
+    if number_instances == 0:#if "0" assume not set, use all instances
+        
+        number_instances=dtm.shape[0]
+        
+    print("Use instances: " + str(number_instances))
 
     param_tunning.fit(dtm[:number_instances], targets[:number_instances])
     
@@ -95,75 +109,10 @@ def performGridSearchForGivenClassifier(document, classifier, clf_parameters,
     
     for param_name in sorted(clf_parameters.keys()):
         print("%s: %r" % (param_name, best_parameters[param_name]))
-    
-    
 
-def performGridSearch(document, min_df, number_instances=1000):
-    
-    t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
-                                   min_df=min_df)
-    
-    dtm, targets = dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                        document,t_vectorizer)
-        
-    model_to_set = OneVsRestClassifier(SVC(decision_function_shape='ovr'))
-
-    parameters = {
-                  "estimator__C": [1,3,8],
-                  "estimator__kernel": ["poly","rbf", "linear", "sigmoid"],
-                  "estimator__degree":[1,3,5],
-                  "estimator__random_state":[1,10,42]
-    }
-    """    
-    parameters = {
-                  "estimator__C": [1,3,5],
-                  "estimator__kernel": ["poly"],
-                  "estimator__degree":[5],
-                  "estimator__random_state":[42]
-    }"""
-    
-    model_tunning = GridSearchCV(model_to_set, param_grid=parameters, verbose=1,
-                                 n_jobs=-1, scoring='f1')
-
-    model_tunning.fit(dtm[:number_instances], targets[:number_instances])
-    
-    print("Best score: " + str(model_tunning.best_score_))
-    print("Best params: " + str(model_tunning.best_params_))
-    
-    best_parameters, score, _ = max(model_tunning.grid_scores_, key=lambda x: x[1])
-    
-    for param_name in sorted(parameters.keys()):
-        print("%s: %r" % (param_name, best_parameters[param_name]))
-        
-def performGridSearchTree(document, min_df, number_instances=1000):
-    
-    t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
-                                   min_df=min_df)
-    
-    dtm, targets = dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                        document,t_vectorizer)
-    
-    
-    model_to_set = DecisionTreeClassifier()
-
-    parameters = {
-        "max_features": ["auto", "sqrt", "log2"],
-        "random_state": [1,5,20,42],
-    }
-
-    model_tunning = GridSearchCV(model_to_set, param_grid=parameters, verbose=1,
-                                 n_jobs=-1, scoring='f1')
-
-    model_tunning.fit(dtm[:number_instances], targets[:number_instances])
-    
-    print("Best score: " + str(model_tunning.best_score_))
-    print("Best params: " + str(model_tunning.best_params_))
-    
-    best_parameters, score, _ = max(model_tunning.grid_scores_, 
-                                    key=lambda x: x[1])
-    
-    for param_name in sorted(parameters.keys()):
-        print("%s: %r" % (param_name, best_parameters[param_name]))
-        
-     
-performGridSearchForAllFields(use_tree=True)
+#perform grid search for all fields and for both classifiers with all instances
+#number_intances=0 use all
+number_instances=0
+performGridSearchForAllFields(number_instances, use_tree=False)
+print()
+performGridSearchForAllFields(number_instances, use_tree=True)

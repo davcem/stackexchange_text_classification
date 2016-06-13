@@ -30,68 +30,6 @@ warnings.filterwarnings("ignore")
         - Perform classification with RandomForest
 
 """
-
-def performClassificationWithGivenClassifier(classifier,document_train, 
-                                             document_test,min_df,
-                                             use_stemmer=False):
-    
-    """
-    Perform classification with given classifier (see 
-    #http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html)
-    
-    :param classifier - The classifier to use (see
-    :param use_stemmer - Wether or not to use a stemmer within word tokenizer
-    :param document_train - dtm for training
-    :param document_test - dtm for testing
-    :param min_df - The minimal number of document frequency (see 
-    #sklearn.feature_extraction.text import TfidfVectorizer)
-    """
-    
-    if use_stemmer:
-        
-        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
-                            min_df=min_df, tokenizer=word_vectorizer.tokenize)
-        
-    else:
-        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
-                                   min_df=min_df)
-        
-    dtm_train, targets_train = \
-            dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                document_train,t_vectorizer)
-    
-    dtm_test, targets_test = \
-        dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                document_test,t_vectorizer)
-    
-    feature_names = t_vectorizer.get_feature_names()
-    print("Number of features:" + str(len(feature_names))) 
-    
-    #put the estimator in the OVR-Classifier and fit the model
-    classifier.fit(dtm_train, targets_train)
-    
-    score_train = classifier.score(dtm_train, targets_train)
-    
-    print("Score train:" + str(score_train))
-    
-    targets_predicted = classifier.predict(dtm_test)
-    
-    print("Score test:" + str(np.mean(targets_predicted == targets_test)))
-    
-    printClassificationMetrics(targets_test, targets_predicted)
-    
-def printClassificationMetrics(ytrue, ypredict):
-    
-    print("Classification performance metrics:")
-    print("Accuracy:" + str(metrics.accuracy_score(ytrue, ypredict)))
-    print("Precision:" + str(metrics.precision_score(ytrue, ypredict, 
-                                                      average='micro')))
-    print("Precision(Macro):" + str(metrics.precision_score(ytrue, ypredict, 
-                                                      average='macro')))
-    print("Recall:" + str(metrics.recall_score(ytrue, ypredict)))
-    print("F1:" + str(metrics.f1_score(ytrue, ypredict, average='micro')))
-    print("F1(Macro):" + str(metrics.f1_score(ytrue, ypredict, average='macro')))
-            
 def performClassificationForAllFields(baseline=True, use_tree=False):
     
     """
@@ -164,7 +102,69 @@ def performClassificationForAllFields(baseline=True, use_tree=False):
                                                 min_df, use_stemmer=False)
             
             print()
-                        
+            
+def performClassificationWithGivenClassifier(classifier,document_train, 
+                                             document_test,min_df,
+                                             use_stemmer=False):
+    
+    """
+    Perform classification with given classifier (see 
+    #http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html)
+    
+    :param classifier - The classifier to use (see
+    :param use_stemmer - Wether or not to use a stemmer within word tokenizer
+    :param document_train - dtm for training
+    :param document_test - dtm for testing
+    :param min_df - The minimal number of document frequency (see 
+    #sklearn.feature_extraction.text import TfidfVectorizer)
+    """
+    
+    if use_stemmer:
+        
+        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
+                            min_df=min_df, tokenizer=word_vectorizer.tokenize)
+        
+    else:
+        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
+                                   min_df=min_df)
+        
+    dtm_train, targets_train = \
+            dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
+                                                document_train,t_vectorizer)
+    
+    dtm_test, targets_test = \
+        dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
+                                                document_test,t_vectorizer)
+    
+    feature_names = t_vectorizer.get_feature_names()
+    print("Number of features:" + str(len(feature_names))) 
+    
+    #put the estimator in the OVR-Classifier and fit the model
+    classifier.fit(dtm_train, targets_train)
+    
+    score_train = classifier.score(dtm_train, targets_train)
+    
+    print("Score train:" + str(score_train))
+    
+    targets_predicted = classifier.predict(dtm_test)
+    
+    print("Score test:" + str(np.mean(targets_predicted == targets_test)))
+    
+    printClassificationMetrics(targets_test, targets_predicted)
+    
+def printClassificationMetrics(ytrue, ypredict):
+    
+    print("Classification performance metrics:")
+    print("Accuracy:" + str(metrics.accuracy_score(ytrue, ypredict)))
+    print("Precision:" + str(metrics.precision_score(ytrue, ypredict, 
+                                                      average='micro')))
+    print("Precision(Macro):" + str(metrics.precision_score(ytrue, ypredict, 
+                                                      average='macro')))
+    print("Recall:" + str(metrics.recall_score(ytrue, ypredict,average='micro')))
+    print("Recall(Macro):" + str(metrics.recall_score(ytrue, ypredict, average='macro')))
+    print("F1:" + str(metrics.f1_score(ytrue, ypredict, average='micro')))
+    print("F1(Macro):" + str(metrics.f1_score(ytrue, ypredict, average='macro')))
+                                    
 #Devlopment set - best title min_df=0.00005
 """
 min_df=0.0000625
@@ -182,5 +182,6 @@ for title: 0.272346501666
 for body: 0.300777407584
 body+title: 0.300936062193
 """
-
-performClassificationForAllFields(baseline=False)
+performClassificationForAllFields(baseline=False,use_tree=False)
+print()
+performClassificationForAllFields(baseline=False,use_tree=True)
