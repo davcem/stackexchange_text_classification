@@ -30,8 +30,6 @@ DSCD_FIELD_TAGS_LIST = 'dataset_tags'
 DEFAULT_DSCD_NAME = 'dataset_content'
 DEFAULT_DSCD_TYPE= 'dataset_content_document'
 
-TAG_SPLIT_separator = '<'
-
 #List of lists of the different document fields
 DEFAULT_ALL_DOCUMENT_FIELDS = [
                                [pp.STACKEXCHANGE_TITLE_COLUMN],
@@ -98,7 +96,7 @@ def buildDatasetContentListsOfDataset(dataset, document_fields):
             
             dataset_content_tags.append(document_tags)
             
-            tags_split = document_tags.split(sep=TAG_SPLIT_separator)
+            tags_split = document_tags.split(sep=pp.STACKEXCHANGE_TAG_SPLIT_SEPARATOR)
             
             for item in tags_split:
                 
@@ -234,7 +232,7 @@ def getDatasetContentDocumentFromDatabase(dataset_document_name, dataset_name,
             and DSCD_FIELD_TYPE in document_keys \
             and DSCD_FIELD_DATASET_NAME in document_keys \
             and DSCD_FIELD_USED_FIELDS in document_keys:
-
+            
             #the document we want needs to have the matching 
             #dataset_document_name type, dataset_name and the correct 
             #used fields            
@@ -246,8 +244,9 @@ def getDatasetContentDocumentFromDatabase(dataset_document_name, dataset_name,
                 #print("found document: " + str(document['_id']))
                 
                 return document
-            
-def buildDTMAndTargetsOfDatasetContentDocument(document, vectorizer):
+
+#TODO: Remove            
+def buildDTMAndTargetsOfDatasetContentDocumentOld(document, vectorizer):
     
     """
     Builds the document-term matrix and targets of a dataset content document.
@@ -258,7 +257,7 @@ def buildDTMAndTargetsOfDatasetContentDocument(document, vectorizer):
     
     :return dtm - The document term matrix
     :return targets - The target tags of document term matrix
-    """       
+    """     
     document_contents = document[DSCD_FIELD_CONTENT]
     
     targets = buildTargetsFromDatasetContentDocument(document)
@@ -285,13 +284,30 @@ def buildTargetsFromDatasetContentDocument(document):
     document_content_tags = document[DSCD_FIELD_CONTENT_TAGS]
     document_tags = document[DSCD_FIELD_TAGS_LIST]
     
+    #TODO: Fix this - This workaround is needed because we can not assure
+    #that the classes (tags) in our training and test set are equaly splitted:
+    #E.g. We have 1000 tags in train but only 990 in test --> to assure 
+    #functionality of classifiere targets of train and test need to have at
+    #least the same shape. To achive that, for test set get corresponding 
+    #training set and create targets with number of columns corresponding to
+    #number of tags within the training data
+    
+    if document[DSCD_FIELD_DATASET_NAME] == ds.DEFAULT_TESTSET_NAME:
+                
+        obtain_train = getDatasetContentDocumentFromDatabase(
+                document[DSCD_FIELD_DATASET_DOCUMENT_USED],
+                ds.DEFAULT_TRAININGSET_NAME, 
+                document[DSCD_FIELD_USED_FIELDS])
+        
+        document_tags = obtain_train[DSCD_FIELD_TAGS_LIST]
+    
     targets = np.zeros((len(index_dictionary.keys()),len(document_tags)))
     
     for key in index_dictionary.keys():
         
         index = index_dictionary[key]
         document_tags = document_content_tags[index]
-        tags_split = document_tags.split(sep=TAG_SPLIT_separator)
+        tags_split = document_tags.split(sep=pp.STACKEXCHANGE_TAG_SPLIT_SEPARATOR)
         
         for item in tags_split:
                 

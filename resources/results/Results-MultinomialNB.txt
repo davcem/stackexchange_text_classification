@@ -1,0 +1,146 @@
+Dataset document used: stackexchange-clean-splitted_datasets
+---------------------------------------------------------------
+Used fields: title
+Number of instances(train):31515
+Number of features:12752
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:8603
+Accuracy(Normalized):0.272981120102
+Precision:0.975349616063
+Precision(Macro):0.822505658255
+Recall:0.556763087416
+Recall(Macro):0.323678772593
+F1:0.70887560989
+F1(Macro):0.442963885474
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:0
+Accuracy(Normalized):0.0
+Precision:0.771464893409
+Precision(Macro):0.000886944383215
+Recall:0.272410220994
+Recall(Macro):0.000692700352848
+F1:0.402643801358
+F1(Macro):0.000711614132759
+Same classifier with cross validation:
+Scores for folds(2):[ 0.01671783  0.01707763]
+f1_macro: 0.02 (+/- 0.00)
+Classification performance metrics:
+Metrics for dataset:train-with-cv
+Accuracy:509
+Accuracy(Normalized):0.0161510391877
+Precision:0.275470643458
+Precision(Macro):0.0164376699158
+Recall:0.331028306193
+Recall(Macro):0.0232875623134
+F1:0.300704825827
+F1(Macro):0.0176436522478
+Classification performance metrics:
+Metrics for dataset:test-with-cv
+Accuracy:103
+Accuracy(Normalized):0.0130710659898
+Precision:0.491241473397
+Precision(Macro):0.0169972596277
+Recall:0.310842541436
+Recall(Macro):0.0101797099877
+F1:0.380754996299
+F1(Macro):0.0125183932931
+
+Used fields: body
+Number of instances(train):31515
+Number of features:72835
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:9518
+Accuracy(Normalized):0.302014913533
+Precision:0.871835026748
+Precision(Macro):0.354497666542
+Recall:0.599269739845
+Recall(Macro):0.212701080172
+F1:0.710302028151
+F1(Macro):0.25765285099
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:0
+Accuracy(Normalized):0.0
+Precision:0.68816454593
+Precision(Macro):0.00155822986253
+Recall:0.272651933702
+Recall(Macro):0.00073446880759
+F1:0.390562397982
+F1(Macro):0.000784377335913
+Same classifier with cross validation:
+Scores for folds(2):[ 0.00802988  0.00863613]
+f1_macro: 0.01 (+/- 0.00)
+Classification performance metrics:
+Metrics for dataset:train-with-cv
+Accuracy:346
+Accuracy(Normalized):0.010978898937
+Precision:0.258635752688
+Precision(Macro):0.00790315028474
+Recall:0.331415826322
+Recall(Macro):0.00953852558349
+F1:0.290537250446
+F1(Macro):0.00831518200281
+Classification performance metrics:
+Metrics for dataset:test-with-cv
+Accuracy:28
+Accuracy(Normalized):0.00355329949239
+Precision:0.820471489019
+Precision(Macro):0.00645210235403
+Recall:0.281215469613
+Recall(Macro):0.00122596711942
+F1:0.41886540143
+F1(Macro):0.00164328270699
+
+Used fields: title,body
+Number of instances(train):31515
+Number of features:73454
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:9529
+Accuracy(Normalized):0.302363953673
+Precision:0.878343097698
+Precision(Macro):0.366292822084
+Recall:0.605513119709
+Recall(Macro):0.213452217379
+F1:0.716846097382
+F1(Macro):0.261147461195
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:0
+Accuracy(Normalized):0.0
+Precision:0.676289189652
+Precision(Macro):0.0015303222403
+Recall:0.272617403315
+Recall(Macro):0.000711669161675
+F1:0.388590835261
+F1(Macro):0.000754141364643
+Same classifier with cross validation:
+Scores for folds(2):[ 0.00877324  0.0092732 ]
+f1_macro: 0.01 (+/- 0.00)
+Classification performance metrics:
+Metrics for dataset:train-with-cv
+Accuracy:426
+Accuracy(Normalized):0.0135173726797
+Precision:0.287502215134
+Precision(Macro):0.00903448887873
+Recall:0.335308250734
+Recall(Macro):0.00995040493402
+F1:0.309570471666
+F1(Macro):0.00918219352424
+Classification performance metrics:
+Metrics for dataset:test-with-cv
+Accuracy:33
+Accuracy(Normalized):0.00418781725888
+Precision:0.833503470804
+Precision(Macro):0.00680969292141
+Recall:0.281940607735
+Recall(Macro):0.00127592303723
+F1:0.421354112912
+F1(Macro):0.00171825394195
+

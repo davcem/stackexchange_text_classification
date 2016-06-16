@@ -1,7 +1,9 @@
 import apache_couchdb.couch_database as db
 import apache_couchdb.couchdb_parameters as cp
+import preprocessing.preprocessing_parameters as pp
 
 from sklearn import cross_validation
+from sklearn.preprocessing import MultiLabelBinarizer
 
 """
 Functionality to split the dataset into training and testset and score
@@ -30,7 +32,7 @@ DATASET_DOCUMENT_TYPE = 'dataset'
 DATASET_DOCUMENT_FIELD_NAME_TRAINING_SET = DEFAULT_TRAININGSET_NAME
 DATASET_DOCUMENT_FIELD_NAME_TEST_SET = DEFAULT_TESTSET_NAME
 
-def splitDocumentsFromDatabaseIntoTrainingAndTestSet(db_name=DEFAULT_DB_NAME,
+def perform_train_test_split(db_name=DEFAULT_DB_NAME,
                                         train_size=DEFAULT_TRAININGSET_SIZE):
     
     """
@@ -40,7 +42,7 @@ def splitDocumentsFromDatabaseIntoTrainingAndTestSet(db_name=DEFAULT_DB_NAME,
     :param db_name: Name of database to split documents (default DEFAULT_DB_NAME)
     :param train_size: Size in percentage [0,1] of the training set.
     :return splitted_dataset - List of lists 
-                    [[DEFAULT_DATASET_LIST_INDEX_TRAINING], [DEFAULT_DATASET_LIST_INDEX_TEST]]
+    [[DEFAULT_DATASET_LIST_INDEX_TRAINING], [DEFAULT_DATASET_LIST_INDEX_TEST]]
     """
     
     database = db.couch_database(db_name)
@@ -48,8 +50,68 @@ def splitDocumentsFromDatabaseIntoTrainingAndTestSet(db_name=DEFAULT_DB_NAME,
    
     splitted_dataset = cross_validation.train_test_split(all_doc_ids, 
                                                train_size=train_size,
-                                               random_state=41)
+                                               random_state=42)
     return splitted_dataset
+
+def performa_special_train_test_split(db_name=DEFAULT_DB_NAME,
+                                        train_size=DEFAULT_TRAININGSET_SIZE):
+    
+    """
+    Get all document_ids of given database and split's it according to given
+    train_size.
+    The tricky part is that we n
+    
+    :param db_name: Name of database to split documents (default DEFAULT_DB_NAME)
+    :param train_size: Size in percentage [0,1] of the training set.
+    :return splitted_dataset - List of lists 
+                    [[DEFAULT_DATASET_LIST_INDEX_TRAINING], 
+                    [DEFAULT_DATASET_LIST_INDEX_TEST]]
+    """
+    
+    database = db.couch_database(db_name)
+    all_docs = database.getAllDocumentsFromDatabase()
+    
+    doc_ids_list = []
+    all_tag_list = []
+    
+    i = 0
+    
+    for row in all_docs.rows:
+        
+        document = row.doc
+        #append the document id to doc_ids_list
+        doc_ids_list.append(document[cp.COUCHDB_DOCUMENT_FIELD_ID])
+        
+        tag_list = []
+        
+        #if document has tags than split and add them
+        if pp.STACKEXCHANGE_TAGS_COLUM in document.keys():
+            
+            document_tags = document[pp.STACKEXCHANGE_TAGS_COLUM]
+            
+            tags_split = document_tags.split(sep=pp.STACKEXCHANGE_TAG_SPLIT_SEPARATOR)
+            
+            for tag in tags_split:
+                
+                #remove the closing tag (last item)
+                tag_list.append(tag[:-1])
+        #append the list of document tags to all_tag_list        
+        all_tag_list.append(tag_list)
+        
+        i += 1
+        
+        if i > 10000:
+            break
+    
+    mlb = MultiLabelBinarizer()
+    tags_encoded = mlb.fit_transform(all_tag_list)
+
+    
+    print(len(doc_ids_list))
+    
+    splitted_dataset = cross_validation.train_test_split(doc_ids_list,tags_encoded,
+                                               train_size=0.8, random_state=42, 
+                                               stratify=tags_encoded)
 
 def insertSplittedDatasetToDatabase(dataset_name, splitted_dataset, 
                                 db_name=DEFAULT_STATISTICS_DB_NAME):
@@ -126,7 +188,7 @@ def getDatasetByNameFromDatasetDocumentByNameFromDatabase(
     
 def createDevelopmentDataset():
     
-    dataset = splitDocumentsFromDatabaseIntoTrainingAndTestSet(
+    dataset = perform_train_test_split(
                                         train_size=DEFAULT_DEVELOPMENTSET_SIZE)
 
     insertSplittedDatasetToDatabase(DEFAULT_DEVOLOPMENT_DATASET_DOCUMENT_NAME,
@@ -136,7 +198,7 @@ def performDatasetSplitter():
     
     dataset_name = DEFAULT_DATASET_DOCUMENT_NAME
     
-    dataset = splitDocumentsFromDatabaseIntoTrainingAndTestSet()
+    dataset = perform_train_test_split()
     
     insertSplittedDatasetToDatabase(dataset_name, dataset)
     

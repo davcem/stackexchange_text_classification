@@ -1,27 +1,3 @@
-* Required software
-** python >=3.0
-** apache-couchdb >=1.0
-*** For installation visit: https://wiki.apache.org/couchdb/Installation
-** couchdb-lucene >=1.1
-*** For installation visit: https://github.com/rnewson/couchdb-lucene
-*** for this software leading wildcards were enabled:
-**** <path_to_couchdb-lucene>/conf/couchdb-lucene.ini set 
-allowLeadingWildcard=true in the [lucene] section
-
-* Required python packages:
-** json
-** csv
-** couchdb
-** requests
-** re
-** string
-** datetime
-** PyStemmer
-** scikit-learn
-** numpy
-
-/*Short readme to work with given packages*/
-
 * Packages:
 	** apache_couchdb - Sources dealing with apache couch_db
 	** preprocessing - Sources dealing with importing and initial cleaning of data

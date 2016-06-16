@@ -23,7 +23,7 @@ QUERY_DETAILS_DATABASE = 'database'
 QUERY_ROWS_KEY = 'rows'
 
 def performQueryOnLuceneCouchdbIndex(view, searchterm, 
-                                     dbname=couchdb_parameters.COUCHDB_NAME, 
+                                     dbname=couchdb_parameters.COUCHDB_CLEANED_NAME, 
                                      include_docs=False):
     """
     Function performs a request for given view with given searchterm
@@ -44,7 +44,7 @@ def performQueryOnLuceneCouchdbIndex(view, searchterm,
                   q=searchterm,
                   include_docs=include_docs
     )
-    
+
     response = requests.get(url=full_url, params=params)
    
     data = json.loads(response.text)
@@ -79,3 +79,15 @@ def build_request_details(view, searchterm, database):
     request_details[QUERY_DETAILS_DATABASE] = database
     
     return request_details
+
+def testQuery():
+    
+    searchterm = '***'
+    data, request_details = performQueryOnLuceneCouchdbIndex(TAGS_VIEW, searchterm, 
+                                     include_docs=True)
+    
+    print(len((data)))
+    
+    print(data[1])
+    
+testQuery()

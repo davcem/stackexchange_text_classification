@@ -1,0 +1,23 @@
+* Required software
+** python >=3.0
+** apache-couchdb >=1.0
+*** For installation visit: https://wiki.apache.org/couchdb/Installation
+** couchdb-lucene >=1.1
+*** For installation visit: https://github.com/rnewson/couchdb-lucene
+*** for this software leading wildcards were enabled:
+**** <path_to_couchdb-lucene>/conf/couchdb-lucene.ini set 
+allowLeadingWildcard=true in the [lucene] section
+
+*Required python packages (external):
+scikit-learn>=0.17.1
+numpy>=1.10
+nltk>=3.2.1
+CouchDB>=1.0.1
+
+* Used python packages (should be included in distro):
+json
+csv
+requests
+re
+string
+datetime

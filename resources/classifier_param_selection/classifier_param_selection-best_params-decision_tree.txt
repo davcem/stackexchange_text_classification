@@ -1,0 +1,58 @@
+Used dataset document used: stackexchange-clean-splitted_datasets
+Used dataset: training
+---------------------------------------------------------------
+Used fields: title
+DecisionTree:
+Use instances: 10000
+Fitting 3 folds for each of 144 candidates, totalling 432 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:  9.1min
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed: 42.4min
+[Parallel(n_jobs=2)]: Done 432 out of 432 | elapsed: 88.9min finished
+Best score: 0.407603299849
+Best params: {'min_samples_split': 10, 'splitter': 'best', 'max_features': 'auto', 'random_state': 5, 'criterion': 'gini'}
+criterion: 'gini'
+max_features: 'auto'
+min_samples_split: 10
+random_state: 5
+splitter: 'best'
+
+Used fields: body
+DecisionTree:
+Use instances: 10000
+Fitting 3 folds for each of 144 candidates, totalling 432 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:  7.8min
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed: 36.0min
+[Parallel(n_jobs=2)]: Done 432 out of 432 | elapsed: 74.1min finished
+Best score: 0.339329857217
+Best params: {'min_samples_split': 2, 'splitter': 'best', 'max_features': 'auto', 'random_state': 1, 'criterion': 'gini'}
+criterion: 'gini'
+max_features: 'auto'
+min_samples_split: 2
+random_state: 1
+splitter: 'best'
+
+Used fields: title,body
+DecisionTree:
+Use instances: 10000
+Fitting 3 folds for each of 144 candidates, totalling 432 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:  7.5min
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed: 34.7min
+[Parallel(n_jobs=2)]: Done 432 out of 432 | elapsed: 71.9min finished
+Best score: 0.344923174
+Best params: {'min_samples_split': 2, 'splitter': 'random', 'max_features': 'auto', 'random_state': 1, 'criterion': 'gini'}
+criterion: 'gini'
+max_features: 'auto'
+min_samples_split: 2
+random_state: 1
+splitter: 'random'
+
+
+Used dataset document used: stackexchange-clean-splitted_datasets
+Used dataset: training
+---------------------------------------------------------------
+Used fields: title
+SVM:
+Use instances: 10000
+Fitting 3 folds for each of 288 candidates, totalling 864 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed: 209.3min
+
