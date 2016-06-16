@@ -241,8 +241,6 @@ def getDatasetContentDocumentFromDatabase(dataset_document_name, dataset_name,
                 and dataset_name == document[DSCD_FIELD_DATASET_NAME] \
                 and used_fields == document[DSCD_FIELD_USED_FIELDS]:
                 
-                #print("found document: " + str(document['_id']))
-                
                 return document
 
 #TODO: Remove            
@@ -292,14 +290,14 @@ def buildTargetsFromDatasetContentDocument(document):
     #training set and create targets with number of columns corresponding to
     #number of tags within the training data
     
-    if document[DSCD_FIELD_DATASET_NAME] == ds.DEFAULT_TESTSET_NAME:
+    """if document[DSCD_FIELD_DATASET_NAME] == ds.DEFAULT_TESTSET_NAME:
                 
         obtain_train = getDatasetContentDocumentFromDatabase(
                 document[DSCD_FIELD_DATASET_DOCUMENT_USED],
                 ds.DEFAULT_TRAININGSET_NAME, 
                 document[DSCD_FIELD_USED_FIELDS])
         
-        document_tags = obtain_train[DSCD_FIELD_TAGS_LIST]
+        document_tags = obtain_train[DSCD_FIELD_TAGS_LIST]"""
     
     targets = np.zeros((len(index_dictionary.keys()),len(document_tags)))
     

@@ -1,7 +1,7 @@
 import preprocessing.preprocessing_parameters as pp
 import data_representation.dataset_spliter as ds
 from data_representation import word_vectorizer
-from data_representation import dtm_builder
+from data_representation import dataset_content_document_provider as dcdp
 from classification import classifier_param_selection
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -63,7 +63,7 @@ def perform_classifiers_for_all_fields(baseline=True, use_tree=False,
         print("---------------------------------------------------------------")
         
         #perform classifiction for given combinations of fields
-        for document_fields in dtm_builder.DEFAULT_ALL_DOCUMENT_FIELDS:
+        for document_fields in dcdp.DEFAULT_ALL_DOCUMENT_FIELDS:
             
             if pp.STACKEXCHANGE_TITLE_COLUMN in document_fields:
             
@@ -76,14 +76,14 @@ def perform_classifiers_for_all_fields(baseline=True, use_tree=False,
                                 word_vectorizer.DEFAULT_MIN_DF_DICT_KEY_OTHERS]
             
             #used to retrieve correct document and fields
-            used_fields = dtm_builder.retrieveValueForUsedFields(document_fields)
+            used_fields = dcdp.retrieveValueForUsedFields(document_fields)
             
             #get the dtm for train
-            document_train = dtm_builder.getDatasetContentDocumentFromDatabase(
+            document_train = dcdp.getDatasetContentDocumentFromDatabase(
                                     dataset_document_name, dataset_name_train, 
                                     used_fields)
             #get the dtm for test
-            document_test = dtm_builder.getDatasetContentDocumentFromDatabase(
+            document_test = dcdp.getDatasetContentDocumentFromDatabase(
                                     dataset_document_name, dataset_name_test, 
                                     used_fields)
             #baseline classifier?
@@ -157,14 +157,14 @@ def perform_classifier(classifier,document_train,document_test,min_df,
         dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
                                                 document_test,t_vectorizer)"""
         
-    document_train_content = document_train[dtm_builder.DSCD_FIELD_CONTENT]
+    document_train_content = document_train[dcdp.DSCD_FIELD_CONTENT]
     train_tfidf = t_vectorizer.fit_transform(document_train_content)
-    targets_train = dtm_builder.buildTargetsFromDatasetContentDocument(
+    targets_train = dcdp.buildTargetsFromDatasetContentDocument(
                                                                 document_train)
         
-    document_test_content = document_test[dtm_builder.DSCD_FIELD_CONTENT]
+    document_test_content = document_test[dcdp.DSCD_FIELD_CONTENT]
     test_tfidf = t_vectorizer.transform(document_test_content)
-    targets_test = dtm_builder.buildTargetsFromDatasetContentDocument(
+    targets_test = dcdp.buildTargetsFromDatasetContentDocument(
                                                                 document_test)
     
     feature_names = t_vectorizer.get_feature_names()

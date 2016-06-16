@@ -1,6 +1,6 @@
 import preprocessing.preprocessing_parameters as pp
 import data_representation.dataset_spliter as ds
-from data_representation import dtm_builder
+from data_representation import dataset_content_document_provider as dcdp
 from data_representation import word_vectorizer
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -59,7 +59,7 @@ def perform_gridsearch_for_all_fields(number_instances, use_tree=False):
         print("Used dataset: " + str(dataset_name))
         print("---------------------------------------------------------------")
         
-        for document_fields in dtm_builder.DEFAULT_ALL_DOCUMENT_FIELDS:
+        for document_fields in dcdp.DEFAULT_ALL_DOCUMENT_FIELDS:
             
             if pp.STACKEXCHANGE_TITLE_COLUMN in document_fields:
             
@@ -71,11 +71,11 @@ def perform_gridsearch_for_all_fields(number_instances, use_tree=False):
                 min_df=word_vectorizer.DEFAULT_MIN_DF_DICT[
                                 word_vectorizer.DEFAULT_MIN_DF_DICT_KEY_OTHERS]
     
-            used_fields = dtm_builder.retrieveValueForUsedFields(document_fields)
+            used_fields = dcdp.retrieveValueForUsedFields(document_fields)
             
             print("Used fields: " + str(used_fields))
         
-            document = dtm_builder.getDatasetContentDocumentFromDatabase(
+            document = dcdp.getDatasetContentDocumentFromDatabase(
                                             dataset_document_name, dataset_name, 
                                             used_fields)
             
@@ -122,9 +122,9 @@ def perform_gridsearch_for_classifier(document, classifier, clf_parameters,
     t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
                                    min_df=min_df)
     
-    document_train_content = document[dtm_builder.DSCD_FIELD_CONTENT]
+    document_train_content = document[dcdp.DSCD_FIELD_CONTENT]
     train_tfidf = t_vectorizer.fit_transform(document_train_content)
-    targets_train = dtm_builder.buildTargetsFromDatasetContentDocument(document)
+    targets_train = dcdp.buildTargetsFromDatasetContentDocument(document)
         
     param_tunning = GridSearchCV(classifier, param_grid=clf_parameters,verbose=1,
                                  n_jobs=2, scoring='f1_macro')
