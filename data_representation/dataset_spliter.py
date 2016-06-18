@@ -89,9 +89,9 @@ def performa_special_train_test_split(db_name=DEFAULT_DB_NAME,
             
             document_tags = document[pp.STACKEXCHANGE_TAGS_COLUM]
             
-            tags_split = document_tags.split(sep=pp.STACKEXCHANGE_TAG_SPLIT_SEPARATOR)
+            tags_list = document_tags.split(sep=pp.STACKEXCHANGE_TAG_SPLIT_SEPARATOR)
             
-            for tag in tags_split:
+            for tag in tags_list:
                 
                 #remove the closing tag (last item)
                 tag_list.append(tag[:-1])

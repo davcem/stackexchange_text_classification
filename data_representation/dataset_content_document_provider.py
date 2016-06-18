@@ -4,6 +4,7 @@ import preprocessing.preprocessing_parameters as pp
 import data_representation.dataset_spliter as ds
 
 import numpy as np
+import re
 
 """
 Builds dataset content documents, stores and gets this document from database
@@ -37,6 +38,13 @@ DEFAULT_ALL_DOCUMENT_FIELDS = [
                                [pp.STACKEXCHANGE_TITLE_COLUMN,pp.STACKEXCHANGE_BODY_COLUMN]
                                ]
 
+TAG_SPLIT_PATTERN=r'\<(.*?)\>'
+
+def provide_tag_list_of_tag_content(tag_content):
+    
+    tags_list=re.findall(TAG_SPLIT_PATTERN, tag_content)
+    return tags_list
+    
 def buildDatasetContentListsOfDataset(dataset, document_fields):
     
     """
@@ -68,7 +76,7 @@ def buildDatasetContentListsOfDataset(dataset, document_fields):
     #key=tag, value=index in tag_list
     tag_index_dictionary = {}
     #list of tags
-    tags_list = []
+    dataset_tags = []
     
     for row in all_doc_ids.rows:
         
@@ -96,20 +104,16 @@ def buildDatasetContentListsOfDataset(dataset, document_fields):
             
             dataset_content_tags.append(document_tags)
             
-            tags_split = document_tags.split(sep=pp.STACKEXCHANGE_TAG_SPLIT_SEPARATOR)
+            tags_list = provide_tag_list_of_tag_content(document_tags)
             
-            for item in tags_split:
-                
-                #remove the closing tag (last item)
-                tag = item[:-1]
-                
+            for tag in tags_list:                
                 # tag does not exist in dict, add it to list and dictionary
                 if tag not in tag_index_dictionary.keys():
-                    tags_list.append(tag)
-                    tag_index_dictionary[tag]=len(tags_list)-1
+                    dataset_tags.append(tag)
+                    tag_index_dictionary[tag]=len(dataset_tags)-1
             
     return index_dictionary, dataset_content, tag_index_dictionary, \
-        dataset_content_tags, tags_list
+        dataset_content_tags, dataset_tags
         
 def createAndInsertDatasetContentDocuments(dataset_document_name):
     
@@ -243,29 +247,9 @@ def getDatasetContentDocumentFromDatabase(dataset_document_name, dataset_name,
                 
                 return document
 
-#TODO: Remove            
-def buildDTMAndTargetsOfDatasetContentDocumentOld(document, vectorizer):
-    
-    """
-    Builds the document-term matrix and targets of a dataset content document.
-    
-    :param document - The dataset content document to build dtm and targets 
-    from
-    :param vectorizer - The vectorizer to use for build dtm and targets
-    
-    :return dtm - The document term matrix
-    :return targets - The target tags of document term matrix
-    """     
-    document_contents = document[DSCD_FIELD_CONTENT]
-    
-    targets = buildTargetsFromDatasetContentDocument(document)
-    
-    Y = vectorizer.fit(document_contents)
-    
-    dtm = Y.transform(document_contents)
-    
-    return dtm, targets
-    
+#TODO: Adapt to integrate MultiLabelBinarizer
+#only split field tags in tag, put them in a list, add this list for each
+#document into a all_tags_list(list of lists)    
 def buildTargetsFromDatasetContentDocument(document):
     
     """
@@ -280,37 +264,34 @@ def buildTargetsFromDatasetContentDocument(document):
     index_dictionary = document[DSCD_FIELD_INDEX_DICTIONARY]
     tag_index_dictionary = document[DSCD_FIELD_TAG_INDEX_DICTIONARY]
     document_content_tags = document[DSCD_FIELD_CONTENT_TAGS]
-    document_tags = document[DSCD_FIELD_TAGS_LIST]
+    dataset_tags = document[DSCD_FIELD_TAGS_LIST]
     
-    #TODO: Fix this - This workaround is needed because we can not assure
-    #that the classes (tags) in our training and test set are equaly splitted:
-    #E.g. We have 1000 tags in train but only 990 in test --> to assure 
-    #functionality of classifiere targets of train and test need to have at
-    #least the same shape. To achive that, for test set get corresponding 
-    #training set and create targets with number of columns corresponding to
-    #number of tags within the training data
+    """#TODO: Fix this - This workaround is needed because we can not assure
+    that the classes (tags) in our training and test set are equaly splitted:
+    E.g. We have 1000 tags in train but only 990 in test --> to assure 
+    functionality of classifiers targets of train and test need to have at
+    least the same shape(n_instances, n_classes). To achieve that for test set 
+    get corresponding training set and create targets with number of columns 
+    corresponding to number of tags within the training data"""
     
-    """if document[DSCD_FIELD_DATASET_NAME] == ds.DEFAULT_TESTSET_NAME:
+    if document[DSCD_FIELD_DATASET_NAME] == ds.DEFAULT_TESTSET_NAME:
                 
-        obtain_train = getDatasetContentDocumentFromDatabase(
+        obtained_train = getDatasetContentDocumentFromDatabase(
                 document[DSCD_FIELD_DATASET_DOCUMENT_USED],
                 ds.DEFAULT_TRAININGSET_NAME, 
                 document[DSCD_FIELD_USED_FIELDS])
         
-        document_tags = obtain_train[DSCD_FIELD_TAGS_LIST]"""
+        dataset_tags = obtained_train[DSCD_FIELD_TAGS_LIST]
     
-    targets = np.zeros((len(index_dictionary.keys()),len(document_tags)))
+    targets = np.zeros((len(index_dictionary.keys()),len(dataset_tags)))
     
     for key in index_dictionary.keys():
         
         index = index_dictionary[key]
         document_tags = document_content_tags[index]
-        tags_split = document_tags.split(sep=pp.STACKEXCHANGE_TAG_SPLIT_SEPARATOR)
+        tags_list=provide_tag_list_of_tag_content(document_tags)
         
-        for item in tags_split:
-                
-            #remove the closing tag (last item)
-            tag = item[:-1]
+        for tag in tags_list:
             tag_index = tag_index_dictionary[tag]
             targets[index,tag_index] = 1
             

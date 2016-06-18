@@ -142,9 +142,6 @@ def provide_train_and_test_idf_dtms(train_content, test_content):
     
     idf_dtm_test = tfidf_transformer_fit.transform(count_dtm_test)
     
-    print(type(idf_dtm_train))
-    print(type(idf_dtm_test))
-    
     return idf_dtm_train, idf_dtm_test
 
 def test_provide_train_and_test_idf_dtms():
@@ -182,27 +179,63 @@ def temp_bug_fix():
                                             dataset_document_name, dataset_name_train, 
                                             used_fields)
     
+    #print(document_train['_id'])
+    
     document_test = dcdp.getDatasetContentDocumentFromDatabase(
                                             dataset_document_name, dataset_name_test, 
                                             used_fields)
-    
+        
     train_content=document_train[dcdp.DSCD_FIELD_CONTENT]
     test_content=document_test[dcdp.DSCD_FIELD_CONTENT]
     train_targets=dcdp.buildTargetsFromDatasetContentDocument(document_train)
     test_targets=dcdp.buildTargetsFromDatasetContentDocument(document_test)
     
+    print(document_test['_id'])
+    
     #len of contents ok
-    print(len(train_content))
+    """print(len(train_content))
     print(len(test_content))
     print(len(train_targets))
-    print(len(test_targets))
+    print(len(test_targets))"""
     
-    idf_dtm_train, idf_dtm_test=provide_train_and_test_idf_dtms(train_content, test_content)
+    idf_dtm_train, idf_dtm_test=provide_train_and_test_idf_dtms(train_content, 
+                                                                test_content)
     #shape of train ok
-    print(idf_dtm_train.shape)
-    print(idf_dtm_test.shape)
+    """print(idf_dtm_train.shape)
+    print(idf_dtm_test.shape)"""
     
-    #TODO: test if targets are aligned
+    #targets are aligned
+    targets_train=dcdp.buildTargetsFromDatasetContentDocument(document_train)
+    targets_test=dcdp.buildTargetsFromDatasetContentDocument(document_test)
+    
+    """print(type(targets_train))
+    print(targets_train.shape)
+    print(type(targets_test))
+    print(targets_test.shape)"""
+    
+    """for (x,y), value in np.ndenumerate(targets_train):
+        print(targets_train[x,y])"""
+        
+    
+        
+    """targets correct - OKAY
+    document index = 20
+    tags=<asynchronous-programming><message-queue><messaging><akka>
+    index asynchronous-programming 48
+    index message-queue 49
+    index messaging 50
+    index akka 51
+    
+    row = targets_test[20, :]
+    
+    for (x), value in np.ndenumerate(row):
+        if value==1:
+            print(x)
+            print(value)
+    """
+    
+    
+    
     
 def test_provide_train_and_test_idf_dtms_real_data():
     
