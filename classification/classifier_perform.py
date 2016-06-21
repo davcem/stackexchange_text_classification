@@ -1,6 +1,6 @@
 import preprocessing.preprocessing_parameters as pp
 import data_representation.dataset_spliter as ds
-from data_representation import word_vectorizer
+from data_representation import dtm_provider
 from data_representation import dataset_content_document_provider as dcdp
 from classification import classifier_param_selection
 
@@ -35,11 +35,9 @@ warnings.filterwarnings("ignore")
 
 """
 
-DEFAULT_CROSS_VALIDATION_FOLD = 3
-
-def perform_classifiers_for_all_fields(baseline=True, use_tree=False, 
-                                      use_cv=False):
+def perform_classifiers_for_all_fields(baseline=True, use_tree=False):
     """
+    #TODO: update docu
     Performs selected classifiers for all fields of stackexchange documents.
     
     :param baseline - whether or not to perform classifier MultinomialNB (if not
@@ -64,19 +62,11 @@ def perform_classifiers_for_all_fields(baseline=True, use_tree=False,
         
         #perform classifiction for given combinations of fields
         for document_fields in dcdp.DEFAULT_ALL_DOCUMENT_FIELDS:
-            
-            if pp.STACKEXCHANGE_TITLE_COLUMN in document_fields:
-            
-                min_df=word_vectorizer.DEFAULT_MIN_DF_DICT[
-                                                pp.STACKEXCHANGE_TITLE_COLUMN]
-            
-            else:
-            
-                min_df=word_vectorizer.DEFAULT_MIN_DF_DICT[
-                                word_vectorizer.DEFAULT_MIN_DF_DICT_KEY_OTHERS]
-            
+                        
             #used to retrieve correct document and fields
             used_fields = dcdp.retrieveValueForUsedFields(document_fields)
+            
+            print("Used fields: " + str(used_fields))
             
             #get the dtm for train
             document_train = dcdp.getDatasetContentDocumentFromDatabase(
@@ -89,43 +79,39 @@ def perform_classifiers_for_all_fields(baseline=True, use_tree=False,
             #baseline classifier?
             if baseline:
                 
-                estimator = MultinomialNB(alpha=0.01)
+                estimator = MultinomialNB()
+                classifier = OneVsRestClassifier(estimator)
+                params = classifier_param_selection.\
+                    provide_best_params_for_classifier(classifier, used_fields)
+                estimator=MultinomialNB(**params)
                 classifier = OneVsRestClassifier(estimator)
                 
             else:#if not baseline classifier use tree or SVC
                 
                 if use_tree:
-                    
-                    print("Classifier:DecisionTree")
                     classifier = tree.DecisionTreeClassifier()
                     params = classifier_param_selection.\
-                    get_params_for_classifier_used_fields(classifier, 
-                                                          used_fields)
+                    provide_best_params_for_classifier(classifier, used_fields)
 
                     classifier = tree.DecisionTreeClassifier(**params)
                     
                 else:
-                    
-                    print("Classifier:SVM")
                     estimator = SVC()
+                    classifier = OneVsRestClassifier(estimator)
                     params = classifier_param_selection.\
-                    get_params_for_classifier_used_fields(estimator, 
-                                                          used_fields)
-
+                    provide_best_params_for_classifier(classifier, used_fields)
                     estimator = SVC(**params)
                     classifier = OneVsRestClassifier(estimator)
-            
-            print("Used fields: " + str(used_fields))
-                
-            perform_classifier(classifier, document_train, document_test,min_df, 
-                               use_cv, use_stemmer=False)
+                        
+            perform_classifier(classifier,used_fields,document_train, 
+                               document_test)
             
             print()
             
-def perform_classifier(classifier,document_train,document_test,min_df,
-                                            use_cv=False,use_stemmer=False):
+def perform_classifier(classifier,used_fields,document_train,document_test):
     
     """
+    #TODO: update docu
     Perform classification with given classifier. Get the given vectorizer and
     build document term matrix with it. Then fit and perform classifier for
     train data (only for presentation purpose). Then predict test set.
@@ -139,55 +125,51 @@ def perform_classifier(classifier,document_train,document_test,min_df,
     :param use_stemmer - Whether or not to use a stemmer within word tokenizer
     :param use_cv - Whether or not to use cross validation.
     """
+    print("Classifier:"+str(classifier))
     
-    if use_stemmer:
-        
-        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
-                            min_df=min_df, tokenizer=word_vectorizer.tokenize)
-        
-    else:
-        t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
-                                   min_df=min_df)
-        
-    """dtm_train, targets_train = \
-            dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                document_train,t_vectorizer)
-    
-    dtm_test, targets_test = \
-        dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
-                                                document_test,t_vectorizer)"""
-        
+    #obtain X.data
     document_train_content = document_train[dcdp.DSCD_FIELD_CONTENT]
-    train_tfidf = t_vectorizer.fit_transform(document_train_content)
-    targets_train = dcdp.buildTargetsFromDatasetContentDocument(
-                                                                document_train)
-        
     document_test_content = document_test[dcdp.DSCD_FIELD_CONTENT]
-    test_tfidf = t_vectorizer.transform(document_test_content)
-    targets_test = dcdp.buildTargetsFromDatasetContentDocument(
-                                                                document_test)
     
-    feature_names = t_vectorizer.get_feature_names()
+    #document_train_content=document_train_content[:num_instances]
+    #document_test_content=document_test_content[:num_instances]
     
-    print("Number of instances(train):" + str(train_tfidf.shape[0]))
+    #first: get the best params for the given classifier and used_fields
+    vectorizer_params=dtm_provider.provide_vectorizer_params_for_classifier(
+                                                                classifier,
+                                                                   used_fields)
+    
+    idf_dtm_train, idf_dtm_test,c_vectorizer_fit=dtm_provider.\
+                                provide_train_and_test_idf_dtms(
+                                vectorizer_params, document_train_content, 
+                                document_test_content)
+    
+    #obtain targets
+    targets_train = dcdp.buildTargetsFromDatasetContentDocument(document_train)
+    targets_test = dcdp.buildTargetsFromDatasetContentDocument(document_test)
+    
+    #idf_dtm_train=idf_dtm_train[:num_instances]
+    #idf_dtm_test=idf_dtm_test[:num_instances]
+    #targets_train=targets_train[:num_instances]
+    #targets_test=targets_test[:num_instances]
+    
+    feature_names = c_vectorizer_fit.get_feature_names()
+    print("Number of instances(train):" + str(idf_dtm_train.shape[0]))
     print("Number of features:" + str(len(feature_names))) 
     
-    classifier.fit(train_tfidf, targets_train)
+    classifier.fit(idf_dtm_train, targets_train)
 
-    targets_train_predicted = classifier.predict(train_tfidf)
+    targets_train_predicted = classifier.predict(idf_dtm_train)
     
     print_classifier_metrics(targets_train,targets_train_predicted, "train")
 
-    targets_test_predicted = classifier.predict(test_tfidf)
+    targets_test_predicted = classifier.predict(idf_dtm_test)
     
-    print("Number of instances(test):" + str(test_tfidf.shape[0]))
+    print("Number of instances(test):" + str(idf_dtm_test.shape[0]))
     
     print_classifier_metrics(targets_test, targets_test_predicted, "test")
-    
-    if use_cv:
-        perform_classifier_cross_validation(classifier, train_tfidf,targets_train,
-                                                 test_tfidf, targets_test)
 
+#TODO: Remove only needed in param_selection(GridSearch)
 def perform_classifier_cross_validation(classifier, dtm_train,targets_train,
                                                  dtm_test, targets_test):
     cv = 3
@@ -235,37 +217,19 @@ def print_classifier_metrics(ytrue, ypredict,dataset_type):
     print("F1(Macro):" + str(metrics.f1_score(ytrue, ypredict, 
                                               average='macro')))
                                     
-#Devlopment set - best title min_df=0.00005
-"""
-min_df=0.0000625
-for title: 0.178613358718 
-for body: 0.307187053784
-body+title: 0.314548627638
-
-min_df=0.00003125
-for title: 0.272346501666 
-for body: 0.300777407584 
-body+title: 0.300936062193
-
-min_df=0.000016 (kein Fortschritt mehr)
-for title: 0.272346501666
-for body: 0.300777407584
-body+title: 0.300936062193
-"""
-
 def perform_classification():
     
-    #NaiveBayes
-    #perform_classifiers_for_all_fields(baseline=True, use_cv=True)
+    #NaiveBayes(baseline=True)
+    #perform_classifiers_for_all_fields(baseline=True,use_tree=False)
     #print()
     
-    #SVM
+    #SVMbaseline=False)
     #perform_classifiers_for_all_fields(baseline=False,use_tree=False)
     #print()
     
     #DecisionTree
-    perform_classifiers_for_all_fields(baseline=False,use_tree=True,use_cv=True)
+    perform_classifiers_for_all_fields(baseline=False,use_tree=True)
     print()
-    perform_classifiers_for_all_fields(baseline=False,use_tree=False, use_cv=True)
+    #perform_classifiers_for_all_fields(baseline=False,use_tree=False, use_cv=True)
     
 perform_classification()

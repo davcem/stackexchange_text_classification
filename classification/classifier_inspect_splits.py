@@ -9,7 +9,7 @@ from sklearn.cross_validation import StratifiedShuffleSplit
 
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from data_representation import dtm_builder
+from data_representation import dtm_provider
 import data_representation.dataset_spliter as ds
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -26,36 +26,36 @@ def testClassifier():
     #testing part of dataset
     dataset_name_test=ds.DEFAULT_TESTSET_NAME
     
-    for document_fields in dtm_builder.DEFAULT_ALL_DOCUMENT_FIELDS:
+    for document_fields in dtm_provider.DEFAULT_ALL_DOCUMENT_FIELDS:
     
         #used to retrieve correct document and fields
-        used_fields = dtm_builder.retrieveValueForUsedFields(document_fields)
+        used_fields = dtm_provider.retrieveValueForUsedFields(document_fields)
                 
         #get the dtm for train
-        document_train = dtm_builder.getDatasetContentDocumentFromDatabase(
+        document_train = dtm_provider.getDatasetContentDocumentFromDatabase(
                                         dataset_document_name, dataset_name_train, 
                                         used_fields)
                 
-        document_test = dtm_builder.getDatasetContentDocumentFromDatabase(
+        document_test = dtm_provider.getDatasetContentDocumentFromDatabase(
                                         dataset_document_name, dataset_name_test, 
                                         used_fields)
     
         t_vectorizer = TfidfVectorizer(analyzer='word',stop_words='english', 
                                    min_df=min_df)
     
-        document_train_content = document_train[dtm_builder.DSCD_FIELD_CONTENT]
+        document_train_content = document_train[dtm_provider.DSCD_FIELD_CONTENT]
         
         X_train_tfidf = t_vectorizer.fit_transform(document_train_content)
-        targets_train = dtm_builder.buildTargetsFromDatasetContentDocument(document_train)
+        targets_train = dtm_provider.buildTargetsFromDatasetContentDocument(document_train)
         
         """printDetails(X_train_tfidf)
         printDetails(targets_train)
         print()"""
         
-        document_test_content = document_train[dtm_builder.DSCD_FIELD_CONTENT]
+        document_test_content = document_train[dtm_provider.DSCD_FIELD_CONTENT]
         
         X_test_tfidf = t_vectorizer.transform(document_test_content)
-        targets_test = dtm_builder.buildTargetsFromDatasetContentDocument(document_test)
+        targets_test = dtm_provider.buildTargetsFromDatasetContentDocument(document_test)
         
         """printDetails(X_test_tfidf)
         printDetails(targets_test)
@@ -64,13 +64,13 @@ def testClassifier():
     
         
         """dtm_train, targets_train = \
-                dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
+                dtm_provider.buildDTMAndTargetsOfDatasetContentDocument(
                                                     document_train,t_vectorizer)"""
         
         #t_vectorizer = TfidfVectorizer(analyzer='word',min_df=0)
         
         """dtm_test, targets_test = \
-            dtm_builder.buildDTMAndTargetsOfDatasetContentDocument(
+            dtm_provider.buildDTMAndTargetsOfDatasetContentDocument(
                                                     document_test,t_vectorizer)"""
 
         
@@ -112,7 +112,7 @@ def perform_train_test_split(db_name=ds.DEFAULT_DB_NAME,
             
             document_tags = document[pp.STACKEXCHANGE_TAGS_COLUM]
             
-            tags_list = document_tags.split(sep=dtm_builder.TAG_SPLIT_separator)
+            tags_list = document_tags.split(sep=dtm_provider.TAG_SPLIT_separator)
             
             for tag in tags_list:
                 

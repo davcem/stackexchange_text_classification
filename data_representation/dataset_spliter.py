@@ -32,6 +32,7 @@ DATASET_DOCUMENT_TYPE = 'dataset'
 DATASET_DOCUMENT_FIELD_NAME_TRAINING_SET = DEFAULT_TRAININGSET_NAME
 DATASET_DOCUMENT_FIELD_NAME_TEST_SET = DEFAULT_TESTSET_NAME
 
+#TODO: Also add split of training set for development set (0.1 of training)
 def perform_train_test_split(db_name=DEFAULT_DB_NAME,
                                         train_size=DEFAULT_TRAININGSET_SIZE):
     
@@ -53,6 +54,7 @@ def perform_train_test_split(db_name=DEFAULT_DB_NAME,
                                                random_state=42)
     return splitted_dataset
 
+#TODO: try train_test_split again, maybe with bugfix version of sklearn
 def performa_special_train_test_split(db_name=DEFAULT_DB_NAME,
                                         train_size=DEFAULT_TRAININGSET_SIZE):
     

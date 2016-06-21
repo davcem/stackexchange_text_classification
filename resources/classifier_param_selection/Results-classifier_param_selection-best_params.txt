@@ -1,0 +1,137 @@
+Used dataset document used: stackexchange-clean-splitted_development-datasets
+Used dataset: training
+===============================================================
+Used_field(s):title
+-----------------------------------------------------------
+Naive Bayes
+-----------
+Fitting 2 folds for each of 120 candidates, totalling 240 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:   24.8s
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed:  1.8min
+[Parallel(n_jobs=2)]: Done 240 out of 240 | elapsed:  2.2min finished
+Grid search took 132.169s
+Best score: 0.0203879208571
+Best params: {'tfidf__norm': 'l2', 'vect__max_df': 0.2, 'clf__estimator__alpha': 0.001, 'vect__min_df': 1}
+clf__estimator__alpha: 0.001
+tfidf__norm: 'l2'
+vect__max_df: 0.2
+vect__min_df: 1
+
+Decision tree
+--------------
+Fitting 2 folds for each of 3456 candidates, totalling 6912 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:   11.9s
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed:   48.6s
+[Parallel(n_jobs=2)]: Done 446 tasks      | elapsed:  1.8min
+[Parallel(n_jobs=2)]: Done 796 tasks      | elapsed:  3.2min
+[Parallel(n_jobs=2)]: Done 1246 tasks      | elapsed:  5.0min
+[Parallel(n_jobs=2)]: Done 1796 tasks      | elapsed:  7.2min
+[Parallel(n_jobs=2)]: Done 2446 tasks      | elapsed:  9.7min
+[Parallel(n_jobs=2)]: Done 3196 tasks      | elapsed: 12.3min
+[Parallel(n_jobs=2)]: Done 4046 tasks      | elapsed: 15.8min
+[Parallel(n_jobs=2)]: Done 4996 tasks      | elapsed: 19.8min
+[Parallel(n_jobs=2)]: Done 6046 tasks      | elapsed: 24.1min
+[Parallel(n_jobs=2)]: Done 6912 out of 6912 | elapsed: 27.2min finished
+Grid search took 1635.380s
+Best score: 0.0229181485881
+Best params: {'clf__random_state': 20, 'clf__splitter': 'random', 'clf__criterion': 'gini', 'clf__min_samples_split': 2, 'clf__max_features': 'auto', 'vect__max_df': 0.2, 'tfidf__norm': 'l2', 'vect__min_df': 2}
+clf__criterion: 'gini'
+clf__max_features: 'auto'
+clf__min_samples_split: 2
+clf__random_state: 20
+clf__splitter: 'random'
+tfidf__norm: 'l2'
+vect__max_df: 0.2
+vect__min_df: 2
+
+***********************************************************
+Used_field(s):body
+-----------------------------------------------------------
+Naive Bayes
+-----------
+Fitting 2 folds for each of 120 candidates, totalling 240 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:   34.6s
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed:  2.5min
+[Parallel(n_jobs=2)]: Done 240 out of 240 | elapsed:  3.0min finished
+Grid search took 184.701s
+Best score: 0.00236808890539
+Best params: {'tfidf__norm': 'l2', 'vect__max_df': 0.2, 'clf__estimator__alpha': 0.01, 'vect__min_df': 2}
+clf__estimator__alpha: 0.01
+tfidf__norm: 'l2'
+vect__max_df: 0.2
+vect__min_df: 2
+
+Decision tree
+--------------
+Fitting 2 folds for each of 3456 candidates, totalling 6912 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:   28.3s
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed:  1.7min
+[Parallel(n_jobs=2)]: Done 446 tasks      | elapsed:  4.0min
+[Parallel(n_jobs=2)]: Done 796 tasks      | elapsed:  7.0min
+[Parallel(n_jobs=2)]: Done 1246 tasks      | elapsed: 10.7min
+[Parallel(n_jobs=2)]: Done 1796 tasks      | elapsed: 15.6min
+[Parallel(n_jobs=2)]: Done 2446 task'gamma': 0.3, 'random_state': 1,'kernel': 'sigmoid', 
+                            'C': 8.0,'max_iter': 10000, 'tol': 0.0001s      | elapsed: 20.6min
+[Parallel(n_jobs=2)]: Done 3196 tasks      | elapsed: 25.0min
+[Parallel(n_jobs=2)]: Done 4046 tasks      | elapsed: 31.6min
+[Parallel(n_jobs=2)]: Done 4996 tasks      | elapsed: 39.2min
+[Parallel(n_jobs=2)]: Done 6046 tasks      | elapsed: 46.8min
+[Parallel(n_jobs=2)]: Done 6912 out of 6912 | elapsed: 51.7min finished
+Grid search took 3103.675s
+Best score: 0.0150800331585
+Best params: {'clf__random_state': 42, 'clf__splitter': 'random', 'clf__criterion': 'gini', 'clf__min_samples_split': 2, 'clf__max_features': 'auto', 'vect__max_df': 0.3, 'tfidf__norm': 'l1', 'vect__min_df': 2}
+clf__criterion: 'gini'
+clf__max_features: 'auto'
+clf__min_samples_split: 2
+clf__random_state: 42
+clf__splitter: 'random'
+tfidf__norm: 'l1'
+vect__max_df: 0.3
+vect__min_df: 2
+
+***********************************************************
+Used_field(s):title,body
+-----------------------------------------------------------
+Naive Bayes
+-----------
+Fitting 2 folds for each of 120 candidates, totalling 240 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:   35.3s
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed:  2.5min
+[Parallel(n_jobs=2)]: Done 240 out of 240 | elapsed:  3.1min finished
+Grid search took 187.972s
+Best score: 0.00326641771036
+Best params: {'tfidf__norm': 'l2', 'vect__max_df': 0.2, 'clf__estimator__alpha': 0.01, 'vect__min_df': 2}
+clf__estimator__alpha: 0.01
+tfidf__norm: 'l2'
+vect__max_df: 0.2
+vect__min_df: 2
+
+Decision tree
+--------------
+Fitting 2 folds for each of 3456 candidates, totalling 6912 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed:   27.3s
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed:  1.7min
+[Parallel(n_jobs=2)]: Done 446 tasks      | elapsed:  3.9min
+[Parallel(n_jobs=2)]: Done 796 tasks      | elapsed:  6.9min
+[Parallel(n_jobs=2)]: Done 1246 tasks      | elapsed: 10.6min
+[Parallel(n_jobs=2)]: Done 1796 tasks      | elapsed: 15.3min
+[Parallel(n_jobs=2)]: Done 2446 tasks      | elapsed: 20.3min
+[Parallel(n_jobs=2)]: Done 3196 tasks      | elapsed: 24.6min
+[Parallel(n_jobs=2)]: Done 4046 tasks      | elapsed: 31.2min
+[Parallel(n_jobs=2)]: Done 4996 tasks      | elapsed: 38.9min
+[Parallel(n_jobs=2)]: Done 6046 tasks      | elapsed: 46.6min
+[Parallel(n_jobs=2)]: Done 6912 out of 6912 | elapsed: 51.5min finished
+Grid search took 3089.436s
+Best score: 0.0157726778468
+Best params: {'clf__random_state': 5, 'clf__splitter': 'best', 'clf__criterion': 'gini', 'clf__min_samples_split': 2, 'clf__max_features': 'auto', 'vect__max_df': 0.4, 'tfidf__norm': 'l1', 'vect__min_df': 2}
+clf__criterion: 'gini'
+clf__max_features: 'auto'
+clf__min_samples_split: 2
+clf__random_state: 5
+clf__splitter: 'best'
+tfidf__norm: 'l1'
+vect__max_df: 0.4
+vect__min_df: 2
+
+***********************************************************
+

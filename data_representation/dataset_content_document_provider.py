@@ -198,8 +198,11 @@ def retrieveValueForUsedFields(document_fields):
     :return str - String of document_fields to use for storing and retrieving
     content document.
     """
+    if document_fields.__class__.__name__==[].__class__.__name__:
+        return ','.join(document_fields)
     
-    return ','.join(document_fields)
+    else:
+        return document_fields
 
 def getDatasetContentDocumentFromDatabase(dataset_document_name, dataset_name, 
                                           used_fields,doc_type=DEFAULT_DSCD_TYPE, 
