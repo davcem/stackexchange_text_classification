@@ -1,0 +1,53 @@
+Used dataset document used: stackexchange-clean-splitted_development-datasets
+Used dataset: training
+===============================================================
+Train for num_instances:1969
+Used_field(s):body
+-----------------------------------------------------------
+SVM
+-----
+Fitting 2 folds for each of 384 candidates, totalling 768 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed: 39.0min
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed: 73.1min
+[Parallel(n_jobs=2)]: Done 446 tasks      | elapsed: 147.5min
+[Parallel(n_jobs=2)]: Done 768 out of 768 | elapsed: 213.1min finished
+Grid search took 12863.076s
+Best score: 0.0228347562272
+Best params: {'vect__min_df': 10, 'clf__estimator__kernel': 'linear', 'clf__estimator__random_state': 42, 'clf__estimator__gamma': 0.3, 'vect__max_df': 0.2, 'clf__estimator__C': 3.0, 'clf__estimator__tol': 1e-06, 'tfidf__norm': 'l2', 'clf__estimator__max_iter': 1000}
+clf__estimator__C: 3.0
+clf__estimator__gamma: 0.3
+clf__estimator__kernel: 'linear'
+clf__estimator__max_iter: 1000
+clf__estimator__random_state: 42
+clf__estimator__tol: 1e-06
+tfidf__norm: 'l2'
+vect__max_df: 0.2
+vect__min_df: 10
+
+
+***********************************************************
+Train for num_instances:1969
+Used_field(s):title,body
+-----------------------------------------------------------
+SVM
+-----
+Fitting 2 folds for each of 384 candidates, totalling 768 fits
+[Parallel(n_jobs=2)]: Done  46 tasks      | elapsed: 40.2min
+[Parallel(n_jobs=2)]: Done 196 tasks      | elapsed: 74.9min
+[Parallel(n_jobs=2)]: Done 446 tasks      | elapsed: 150.9min
+[Parallel(n_jobs=2)]: Done 768 out of 768 | elapsed: 216.6min finished
+Grid search took 13071.513s
+Best score: 0.0312393061802
+Best params: {'vect__min_df': 10, 'clf__estimator__kernel': 'linear', 'clf__estimator__random_state': 42, 'clf__estimator__gamma': 0.3, 'vect__max_df': 0.2, 'clf__estimator__C': 3.0, 'clf__estimator__tol': 1e-06, 'tfidf__norm': 'l2', 'clf__estimator__max_iter': 1000}
+clf__estimator__C: 3.0
+clf__estimator__gamma: 0.3
+clf__estimator__kernel: 'linear'
+clf__estimator__max_iter: 1000
+clf__estimator__random_state: 42
+clf__estimator__tol: 1e-06
+tfidf__norm: 'l2'
+vect__max_df: 0.2
+vect__min_df: 10
+
+
+***********************************************************

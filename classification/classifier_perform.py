@@ -35,7 +35,8 @@ warnings.filterwarnings("ignore")
 
 """
 
-def perform_classifiers_for_all_fields(baseline=True, use_tree=False):
+def perform_classifiers_for_given_fieldslist(document_fields_list,
+                                             baseline=True, use_tree=False):
     """
     #TODO: update docu
     Performs selected classifiers for all fields of stackexchange documents.
@@ -61,7 +62,7 @@ def perform_classifiers_for_all_fields(baseline=True, use_tree=False):
         print("---------------------------------------------------------------")
         
         #perform classifiction for given combinations of fields
-        for document_fields in dcdp.DEFAULT_ALL_DOCUMENT_FIELDS:
+        for document_fields in document_fields_list:
                         
             #used to retrieve correct document and fields
             used_fields = dcdp.retrieveValueForUsedFields(document_fields)
@@ -143,6 +144,8 @@ def perform_classifier(classifier,used_fields,document_train,document_test):
                                 provide_train_and_test_idf_dtms(
                                 vectorizer_params, document_train_content, 
                                 document_test_content)
+                                
+    print(c_vectorizer_fit)
     
     #obtain targets
     targets_train = dcdp.buildTargetsFromDatasetContentDocument(document_train)
@@ -219,17 +222,22 @@ def print_classifier_metrics(ytrue, ypredict,dataset_type):
                                     
 def perform_classification():
     
-    #NaiveBayes(baseline=True)
-    #perform_classifiers_for_all_fields(baseline=True,use_tree=False)
-    #print()
+    document_fields_list=dcdp.DEFAULT_ALL_DOCUMENT_FIELDS
+    #pop title field
+    #document_fields_list.pop(0)
+    #print(document_fields_list)
     
-    #SVMbaseline=False)
-    #perform_classifiers_for_all_fields(baseline=False,use_tree=False)
-    #print()
+    #NaiveBayes(baseline=True)
+    #perform_classifiers_for_given_fieldslist(document_fields_list,baseline=True,
+    #                                         use_tree=False)
     
     #DecisionTree
-    perform_classifiers_for_all_fields(baseline=False,use_tree=True)
-    print()
-    #perform_classifiers_for_all_fields(baseline=False,use_tree=False, use_cv=True)
+    perform_classifiers_for_given_fieldslist(document_fields_list,
+                                                 baseline=False,use_tree=True)
+    #print()
+    
+    #SVM baseline=True
+    #perform_classifiers_for_given_fieldslist(document_fields_list,baseline=True,
+    #                                                            use_tree=False)
     
 perform_classification()

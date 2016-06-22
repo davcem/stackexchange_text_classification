@@ -1,0 +1,108 @@
+[['title'], ['body'], ['title', 'body']]
+Dataset document used: stackexchange-clean-splitted_datasets
+---------------------------------------------------------------
+Used fields: title
+Classifier:DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features='auto', max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=1, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=20, splitter='random')
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.2, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:12752
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:31436
+Accuracy(Normalized):0.997493257179
+Precision:1.0
+Precision(Macro):1.0
+Recall:0.998333490923
+Recall(Macro):0.999083780204
+F1:0.999166050569
+F1(Macro):0.999523638321
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:2
+Accuracy(Normalized):0.000253807106599
+Precision:0.00602847936805
+Precision(Macro):0.00141396948218
+Recall:0.00550284629981
+Recall(Macro):0.00145874848534
+F1:0.00575368285303
+F1(Macro):0.00105536900732
+
+Used fields: body
+Classifier:DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features='auto', max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=1, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=42, splitter='random')
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.5, max_features=None, min_df=2,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:26766
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:31505
+Accuracy(Normalized):0.999682690782
+Precision:1.0
+Precision(Macro):1.0
+Recall:0.999834531014
+Recall(Macro):0.999912055985
+F1:0.999917258661
+F1(Macro):0.999955182582
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:2
+Accuracy(Normalized):0.000253807106599
+Precision:0.0065
+Precision(Macro):0.00115408357906
+Recall:0.00555028462998
+Recall(Macro):0.00127237853493
+F1:0.00598771750256
+F1(Macro):0.000821022558694
+
+Used fields: title,body
+Classifier:DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features='auto', max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=1, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=1, splitter='best')
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.5, max_features=None, min_df=5,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:14802
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:31507
+Accuracy(Normalized):0.999746152626
+Precision:1.0
+Precision(Macro):1.0
+Recall:0.999869988654
+Recall(Macro):0.999949809631
+F1:0.999934990101
+F1(Macro):0.999974619863
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:2
+Accuracy(Normalized):0.000253807106599
+Precision:0.0062031393279
+Precision(Macro):0.00172559603737
+Recall:0.00545540796964
+Recall(Macro):0.00155314115142
+F1:0.00580529543906
+F1(Macro):0.000812507103787
+

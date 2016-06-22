@@ -39,12 +39,12 @@ BEST_PARAMS_DECISIONTREE = {pp.STACKEXCHANGE_TITLE_COLUMN:{'random_state': 20,
                                      'splitter': 'random', 
                                      'criterion': 'gini', 
                                      'min_samples_split': 1, 
-                                     'max_features': 'auto'},
+                                     'max_features': 1000},#'auto'},
                         pp.STACKEXCHANGE_BODY_COLUMN:{'random_state': 42, 
                                 'splitter': 'random', 
                                 'criterion': 'gini', 
                                 'min_samples_split': 1, 
-                                'max_features': 'auto'},
+                                'max_features': 2000},#'auto'},
                         dcdp.retrieveValueForUsedFields(
                                         [pp.STACKEXCHANGE_TITLE_COLUMN, 
                                           pp.STACKEXCHANGE_BODY_COLUMN]):{
@@ -52,19 +52,20 @@ BEST_PARAMS_DECISIONTREE = {pp.STACKEXCHANGE_TITLE_COLUMN:{'random_state': 20,
                                       'splitter': 'best', 
                                       'criterion': 'gini', 
                                       'min_samples_split': 1, 
-                                      'max_features': 'auto'}
+                                      'max_features': 2000},#'auto'}
                         }
 
 #best params for svm
 BEST_PARAMS_SVM = {pp.STACKEXCHANGE_TITLE_COLUMN:{'gamma': 0.3, 
                                     'random_state': 1,'kernel': 'linear', 
                                     'C': 3.0,'max_iter': 1000, 'tol': 1e-06},
-              pp.STACKEXCHANGE_BODY_COLUMN:{'gamma': 0.3, 'random_state': 1, 
-                    'kernel': 'sigmoid','C': 8.0,'max_iter': 10000,'tol': 0.01},
+              pp.STACKEXCHANGE_BODY_COLUMN:{'gamma': 0.3, 
+                                    'random_state': 42,'kernel': 'linear', 
+                                    'C': 3.0,'max_iter': 1000, 'tol': 1e-06},
               dcdp.retrieveValueForUsedFields([pp.STACKEXCHANGE_TITLE_COLUMN, 
                                           pp.STACKEXCHANGE_BODY_COLUMN]):{
-                            'gamma': 0.3, 'random_state': 1,'kernel': 'linear', 
-                            'C': 3.0,'max_iter': 10000,'tol': 0.01}
+                            'gamma': 0.3,'random_state': 1,'kernel': 'linear', 
+                            'C': 3.0,'max_iter': 1000, 'tol': 1e-06}
               }
 
 #best params for both
@@ -76,7 +77,7 @@ BEST_VECTORIZER_PARAMS_CLASSIFIERS = {
                            }
    
 def perform_gridsearch_for_given_fieldslist(document_fields_list,
-                                            number_instances,include_svm=False):
+                                            number_instances,svm=False):
     #TODO: update docu
     
     dataset_document_names = [ds.DEFAULT_DEVOLOPMENT_DATASET_DOCUMENT_NAME]
@@ -109,7 +110,7 @@ def perform_gridsearch_for_given_fieldslist(document_fields_list,
             print("Used_field(s):"+str(used_fields))
             print("-----------------------------------------------------------")
             
-            if include_svm:
+            if svm:
             
                 #svm
                 print("SVM")
@@ -121,48 +122,48 @@ def perform_gridsearch_for_given_fieldslist(document_fields_list,
                   "clf__estimator__kernel": ["poly","rbf", "linear", "sigmoid"],
                   "clf__estimator__gamma":[0.3, 0.01],
                   "clf__estimator__tol":[1e-2,1e-6],
-                  "clf__estimator__random_state":[1,42],
-                  "clf__estimator__max_iter":[1000, -1]
+                  "clf__estimator__random_state":[42],
+                  "clf__estimator__max_iter":[1000]
                   }
                 
                 perform_gridsearch_for_classifier(classifier, 
                                             classifier_parameters, train_data, 
                                             train_targets, number_instances)
                 print()
-            
-            #naive bayes
-            print("Naive Bayes")
-            print("-----------")
-            estimator = MultinomialNB()
-            classifier = OneVsRestClassifier(estimator)
-    
-            classifier_parameters = {
-                                    'clf__estimator__alpha': 
-                                                    (1e-2,1e-3, 1e-4,1e-5,1e-6,
-                                                     1e-7)
-                                    }
-            
-            perform_gridsearch_for_classifier(classifier, 
-                                            classifier_parameters, train_data, 
-                                            train_targets, number_instances)
-            print()
-            
-            #decision tree
-            print("Decision tree")
-            print("--------------")
-            classifier = DecisionTreeClassifier()
+            else:
+                #naive bayes
+                print("Naive Bayes")
+                print("-----------")
+                estimator = MultinomialNB()
+                classifier = OneVsRestClassifier(estimator)
+        
+                classifier_parameters = {
+                                        'clf__estimator__alpha': 
+                                                        (1e-2,1e-3, 1e-4,1e-5,1e-6,
+                                                         1e-7)
+                                        }
                 
-            classifier_parameters = {
-                                    "clf__criterion":["gini", "entropy"],
-                                    "clf__splitter":["best", "random"],
-                                    "clf__min_samples_split": [1,2,5],
-                                    "clf__max_features": ["auto","sqrt", "log2"],
-                                    "clf__random_state": [1,42]
-                                    }
-                            
-            perform_gridsearch_for_classifier(classifier, 
-                                            classifier_parameters, train_data, 
-                                            train_targets, number_instances)
+                perform_gridsearch_for_classifier(classifier, 
+                                                classifier_parameters, train_data, 
+                                                train_targets, number_instances)
+                print()
+                
+                #decision tree
+                print("Decision tree")
+                print("--------------")
+                classifier = DecisionTreeClassifier()
+                    
+                classifier_parameters = {
+                                        "clf__criterion":["gini", "entropy"],
+                                        "clf__splitter":["best", "random"],
+                                        "clf__min_samples_split": [1,2,5],
+                                        "clf__max_features": ["auto","sqrt", "log2"],
+                                        "clf__random_state": [1,42]
+                                        }
+                                
+                perform_gridsearch_for_classifier(classifier, 
+                                                classifier_parameters, train_data, 
+                                                train_targets, number_instances)
             print()
             print("***********************************************************")
 
@@ -179,8 +180,8 @@ def perform_gridsearch_for_classifier(classifier, classifier_parameters,
                             ])
     
     pipeline_parameters = {
-                    'vect__min_df': (1,2,5),
-                    'vect__max_df': (0.2,0.5,0.7),              
+                    'vect__min_df': (1,10,50),
+                    'vect__max_df': (0.2,0.5),              
                     'tfidf__norm': ('l1', 'l2')
     }
 
@@ -232,11 +233,10 @@ def perform_parameter_selection():
     document_fields_list=dcdp.DEFAULT_ALL_DOCUMENT_FIELDS
     #pop title field
     document_fields_list.pop(0)
-    document_fields_list.pop(0)
-    print(document_fields_list)
+    #print(document_fields_list)
     #perform grid search for all fields and for both classifiers with all instances
     #number_intances=0 use all
     perform_gridsearch_for_given_fieldslist(document_fields_list,number_instances,
-                                     include_svm=True)
-
+                                     svm=True)
+    
 perform_parameter_selection()

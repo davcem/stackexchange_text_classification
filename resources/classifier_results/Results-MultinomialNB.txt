@@ -1,0 +1,102 @@
+[['title'], ['body'], ['title', 'body']]
+Dataset document used: stackexchange-clean-splitted_datasets
+---------------------------------------------------------------
+Used fields: title
+Classifier:OneVsRestClassifier(estimator=MultinomialNB(alpha=0.001, class_prior=None, fit_prior=True),
+          n_jobs=1)
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.2, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:12752
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:11336
+Accuracy(Normalized):0.359701729335
+Precision:0.952970565874
+Precision(Macro):0.956589457675
+Recall:0.518508888048
+Recall(Macro):0.674519648304
+F1:0.671601233897
+F1(Macro):0.774081273159
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:0
+Accuracy(Normalized):0.0
+Precision:0.00465282748747
+Precision(Macro):0.000939679978848
+Recall:0.00061669829222
+Recall(Macro):0.000208442339509
+F1:0.0010890508503
+F1(Macro):0.00028736372917
+
+Used fields: body
+Classifier:OneVsRestClassifier(estimator=MultinomialNB(alpha=0.01, class_prior=None, fit_prior=True),
+          n_jobs=1)
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.2, max_features=None, min_df=2,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:26752
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:9893
+Accuracy(Normalized):0.313914009202
+Precision:0.896076065246
+Precision(Macro):0.702332120695
+Recall:0.509041698185
+Recall(Macro):0.408743669214
+F1:0.649255306319
+F1(Macro):0.502688669372
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:0
+Accuracy(Normalized):0.0
+Precision:0.00588451636631
+Precision(Macro):0.000259391348743
+Recall:0.000759013282732
+Recall(Macro):9.02370904371e-05
+F1:0.00134459431069
+F1(Macro):0.000110165225994
+
+Used fields: title,body
+Classifier:OneVsRestClassifier(estimator=MultinomialNB(alpha=0.01, class_prior=None, fit_prior=True),
+          n_jobs=1)
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.2, max_features=None, min_df=2,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:27081
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:10160
+Accuracy(Normalized):0.322386165318
+Precision:0.901409588432
+Precision(Macro):0.766076973085
+Recall:0.527562405446
+Recall(Macro):0.418009280182
+F1:0.66558310842
+F1(Macro):0.521814893353
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:0
+Accuracy(Normalized):0.0
+Precision:0.00578592092575
+Precision(Macro):0.000263737966423
+Recall:0.000853889943074
+Recall(Macro):0.000104258267249
+F1:0.00148815675251
+F1(Macro):0.000120272842565
+
