@@ -1,10 +1,8 @@
-import preprocessing.preprocessing_parameters as pp
 import data_representation.dataset_spliter as ds
 from data_representation import dtm_provider
 from data_representation import dataset_content_document_provider as dcdp
 from classification import classifier_param_selection
 
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
@@ -101,7 +99,7 @@ def perform_classifiers_for_given_fieldslist(document_fields_list,
                     classifier = OneVsRestClassifier(estimator)
                     params = classifier_param_selection.\
                     provide_best_params_for_classifier(classifier, used_fields)
-                    estimator = SVC(**params)
+                    estimator = SVC(decision_function_shape='ovr',**params)
                     classifier = OneVsRestClassifier(estimator)
                         
             perform_classifier(classifier,used_fields,document_train, 
@@ -110,7 +108,6 @@ def perform_classifiers_for_given_fieldslist(document_fields_list,
             print()
             
 def perform_classifier(classifier,used_fields,document_train,document_test):
-    
     """
     #TODO: update docu
     Perform classification with given classifier. Get the given vectorizer and
@@ -132,6 +129,8 @@ def perform_classifier(classifier,used_fields,document_train,document_test):
     document_train_content = document_train[dcdp.DSCD_FIELD_CONTENT]
     document_test_content = document_test[dcdp.DSCD_FIELD_CONTENT]
     
+    #num_instances=1000
+    
     #document_train_content=document_train_content[:num_instances]
     #document_test_content=document_test_content[:num_instances]
     
@@ -151,10 +150,11 @@ def perform_classifier(classifier,used_fields,document_train,document_test):
     targets_train = dcdp.buildTargetsFromDatasetContentDocument(document_train)
     targets_test = dcdp.buildTargetsFromDatasetContentDocument(document_test)
     
+    #num_test_instances=num_instances/10
     #idf_dtm_train=idf_dtm_train[:num_instances]
-    #idf_dtm_test=idf_dtm_test[:num_instances]
+    #idf_dtm_test=idf_dtm_test[:num_test_instances]
     #targets_train=targets_train[:num_instances]
-    #targets_test=targets_test[:num_instances]
+    #targets_test=targets_test[:num_test_instances]
     
     feature_names = c_vectorizer_fit.get_feature_names()
     print("Number of instances(train):" + str(idf_dtm_train.shape[0]))
@@ -226,18 +226,17 @@ def perform_classification():
     #pop title field
     #document_fields_list.pop(0)
     #print(document_fields_list)
+       
+    #SVM baseline=True
+    perform_classifiers_for_given_fieldslist(document_fields_list,
+                                             baseline=False,use_tree=False)
     
     #NaiveBayes(baseline=True)
     #perform_classifiers_for_given_fieldslist(document_fields_list,baseline=True,
     #                                         use_tree=False)
     
     #DecisionTree
-    perform_classifiers_for_given_fieldslist(document_fields_list,
-                                                 baseline=False,use_tree=True)
-    #print()
-    
-    #SVM baseline=True
-    #perform_classifiers_for_given_fieldslist(document_fields_list,baseline=True,
-    #                                                            use_tree=False)
+    #perform_classifiers_for_given_fieldslist(document_fields_list,
+    #                                            baseline=False,use_tree=True)
     
 perform_classification()

@@ -22,7 +22,7 @@ DEFAULT_NORM_KEY='norm'
 BEST_VECTORIZER_PARAMS_NB= {
                  
             pp.STACKEXCHANGE_TITLE_COLUMN:{DEFAULT_NORM_KEY: 'l2',
-                                DEFAULT_MAX_DF_KEY: 0.2, DEFAULT_MIN_DF_KEY: 1},
+                                DEFAULT_MAX_DF_KEY: 0.1, DEFAULT_MIN_DF_KEY: 0.001},
             pp.STACKEXCHANGE_BODY_COLUMN:{DEFAULT_NORM_KEY: 'l2',
                                 DEFAULT_MAX_DF_KEY: 0.2, DEFAULT_MIN_DF_KEY: 2},
             dcdp.retrieveValueForUsedFields([pp.STACKEXCHANGE_TITLE_COLUMN, 
@@ -32,8 +32,8 @@ BEST_VECTORIZER_PARAMS_NB= {
             }
 
 BEST_VECTORIZER_PARAMS_DT= {
-            pp.STACKEXCHANGE_TITLE_COLUMN:{DEFAULT_NORM_KEY: 'l2',
-                                DEFAULT_MAX_DF_KEY: 0.2, DEFAULT_MIN_DF_KEY: 1,
+            pp.STACKEXCHANGE_TITLE_COLUMN:{DEFAULT_NORM_KEY: 'l1',
+                                DEFAULT_MAX_DF_KEY: 0.1, DEFAULT_MIN_DF_KEY: 0.001,
                                 'max_features':500},
             pp.STACKEXCHANGE_BODY_COLUMN:{DEFAULT_NORM_KEY: 'l1',
                                 DEFAULT_MAX_DF_KEY: 0.5, DEFAULT_MIN_DF_KEY: 2,
@@ -48,13 +48,13 @@ BEST_VECTORIZER_PARAMS_DT= {
 #TODO: Fill out after param selection
 BEST_VECTORIZER_PARAMS_SVC= {
             pp.STACKEXCHANGE_TITLE_COLUMN:{DEFAULT_NORM_KEY: 'l2',
-                                DEFAULT_MAX_DF_KEY: 0.2, DEFAULT_MIN_DF_KEY: 2},
+                                DEFAULT_MAX_DF_KEY: 0.1, DEFAULT_MIN_DF_KEY: 0.001},
             pp.STACKEXCHANGE_BODY_COLUMN:{DEFAULT_NORM_KEY: 'l2',
-                                DEFAULT_MAX_DF_KEY: 0.2, DEFAULT_MIN_DF_KEY: 10},
+                                DEFAULT_MAX_DF_KEY: 0.1, DEFAULT_MIN_DF_KEY: 0.001},
             dcdp.retrieveValueForUsedFields([pp.STACKEXCHANGE_TITLE_COLUMN, 
                                           pp.STACKEXCHANGE_BODY_COLUMN]):
                  {DEFAULT_NORM_KEY: 'l2', 
-                  DEFAULT_MAX_DF_KEY: 0.2, DEFAULT_MIN_DF_KEY: 10}
+                  DEFAULT_MAX_DF_KEY: 0.1, DEFAULT_MIN_DF_KEY: 0.001}
             }
 
 #best params for both
@@ -63,7 +63,7 @@ BEST_VECTORIZER_PARAMS_CLASSIFIERS = {
                                     BEST_VECTORIZER_PARAMS_NB,
                            type(DecisionTreeClassifier()).__name__:
                                     BEST_VECTORIZER_PARAMS_DT,      
-                           type(SVC()).__name__: None
+                           type(SVC()).__name__: BEST_VECTORIZER_PARAMS_SVC
                            }
 
 train_content=[        
