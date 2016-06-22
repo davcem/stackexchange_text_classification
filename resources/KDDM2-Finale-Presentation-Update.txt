@@ -1,0 +1,6 @@
+- Schlecht repräsentierte Train und Test (Absturz split Algorithmus)
+- Eigenes Dictionary für die Featuress erstellen (sklearn.Vectorizer versteckt of einiges)
+- Param selection - Meta param selection; which parameters to tune in which ranges???
+- Kombination von Prediction mit probability ja nach verteilung der Klassen (Prediction selbst hochaber Recall niedrig)
+
+- Details siehe git-Repo

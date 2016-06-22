@@ -1,0 +1,52 @@
+Dataset document used: stackexchange-clean-splitted_datasets
+---------------------------------------------------------------
+Used fields: title
+Classifier:OneVsRestClassifier(estimator=SVC(C=3.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma=0.3, kernel='linear',
+  max_iter=5000, probability=False, random_state=42, shrinking=True,
+  tol=0.01, verbose=False),
+          n_jobs=1)
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.1, max_features=None, min_df=0.001,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:975
+Classification performance metrics:
+Metrics for dataset:train
+Accuracy:2384
+Accuracy(Normalized):0.0756465175313
+Precision:0.861930918909
+Precision(Macro):0.226567929007
+Recall:0.218844553707
+Recall(Macro):0.085833651609
+F1:0.34906211707
+F1(Macro):0.115904750134
+Number of instances(test):7880
+Classification performance metrics:
+Metrics for dataset:test
+Accuracy:1
+Accuracy(Normalized):0.000126903553299
+Precision:0.00506376594149
+Precision(Macro):0.000697471521466
+Recall:0.00128083491461
+Recall(Macro):0.000203527209178
+F1:0.00204452521581
+F1(Macro):0.000218978005883
+
+Used fields: body
+Classifier:OneVsRestClassifier(estimator=SVC(C=3.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma=0.3, kernel='linear',
+  max_iter=1000, probability=False, random_state=42, shrinking=True,
+  tol=0.01, verbose=False),
+          n_jobs=1)
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+        dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+        lowercase=True, max_df=0.1, max_features=None, min_df=0.001,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+Number of instances(train):31515
+Number of features:5297

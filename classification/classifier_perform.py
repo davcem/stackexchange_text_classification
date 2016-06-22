@@ -150,7 +150,7 @@ def perform_classifier(classifier,used_fields,document_train,document_test):
     targets_train = dcdp.buildTargetsFromDatasetContentDocument(document_train)
     targets_test = dcdp.buildTargetsFromDatasetContentDocument(document_test)
     
-    #num_test_instances=num_instances/10
+    #num_test_instances=1000
     #idf_dtm_train=idf_dtm_train[:num_instances]
     #idf_dtm_test=idf_dtm_test[:num_test_instances]
     #targets_train=targets_train[:num_instances]
